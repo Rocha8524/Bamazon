@@ -21,10 +21,10 @@ var connection = mysql.createConnection({
 connection.connect(function (error) {
     if (error) throw error;
     console.log("Connected as id " + connection.threadId);
-    queryAllItems();
+    showAllItems();
 });
 
-function queryAllItems() {
+function showAllItems() {
     connection.query("SELECT * FROM products",
         function (error, response) {
             if (error) throw error;
@@ -34,3 +34,16 @@ function queryAllItems() {
             console.log("-----------------------------------");
         });
 }
+
+function startApplication() {
+    inquirer.prompt({
+      name: "postOrBid",
+      type: "rawlist",
+      message: "Would you like to [POST] an auction or [BID] on an auction?",
+      choices: ["POST", "BID"]
+    })
+      .then(function (answer) {
+
+      });
+  }
+
