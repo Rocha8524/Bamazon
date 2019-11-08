@@ -95,16 +95,6 @@ function selectQuantity(product) {
 }
 
 function makePurchase(product, quantity) {
-    connection.query("UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?",
-        [quantity, product.item_id],
-        function (error, response) {
-            if (error) throw error;
-            console.log(response.affectedRows + " products updated!\n");
-            connection.end();
-        }
-    );
-}
-
-function checkStoreInventory() {
+    connection.query("UPDATE products SET stock_quantity = 
 
 }
