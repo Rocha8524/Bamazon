@@ -21,4 +21,16 @@ var connection = mysql.createConnection({
 connection.connect(function (error) {
     if (error) throw error;
     console.log("Connected as id " + connection.threadId);
+    queryAllItems();
 });
+
+function queryAllItems() {
+    connection.query("SELECT * FROM products",
+        function (error, response) {
+            if (error) throw error;
+            for (var i = 0; i < response.length; i++) {
+                console.log("\n" + response[i].id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity);
+            }
+            console.log("-----------------------------------");
+        });
+}
