@@ -29,21 +29,30 @@ function showAllItems() {
         function (error, response) {
             if (error) throw error;
             for (var i = 0; i < response.length; i++) {
-                console.log("\n" + response[i].id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity);
-            }
-            console.log("-----------------------------------");
+                console.log("\n" + response[i].id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + "\n");
+            };
+            welcomeShopper();
         });
 }
 
-function startApplication() {
+function welcomeShopper() {
     inquirer.prompt({
-      name: "postOrBid",
-      type: "rawlist",
-      message: "Would you like to [POST] an auction or [BID] on an auction?",
-      choices: ["POST", "BID"]
+        name: "store",
+        type: "rawlist",
+        message: "Would you like to shop at Bamazon today?",
+        choices: ["Yes", "No"]
     })
-      .then(function (answer) {
+        .then(function (answer) {
+            if (answer.store === "Yes") {
+                console.log("\n" + "Glad you are doing buisness with us today." + "\n" + "We have a great selection of goods in stock.");
+                startShopping();
+            } else {
+                console.log("Just browsing, get lost you freeloader!");
+                connection.end();
+            }
+        });
+}
 
-      });
-  }
+function startShopping() {
 
+}
