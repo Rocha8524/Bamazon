@@ -26,7 +26,7 @@ connection.connect(function (error) {
 
 function welcomeShopper() {
     inquirer.prompt({
-        name: "choice",
+        name: "store",
         type: "rawlist",
         message: "Welcome to Bamazon. Are you interested in shopping with us today?",
         choices: ["Yes", "No"]
@@ -55,18 +55,16 @@ function startShopping(storeInventory) {
     inquirer.prompt([{
         name: "choose",
         type: "input",
-        message: "What item would you like to purchase today?",
+        message: "What item would you like to purchase today? Choose your product based on the item id on the table",
         validate: function (value) {
-            if (isNaN(value) === false) {
-                return true;
-            }
-            return false;
+            return !isNaN(value);
+
         }
     }]).then(function (value) {
         var chooseID = parseInt(value.choose);
-        var item = checkStoreInventory(chooseID, storeInventory);
-        if (item) {
-            selectQuantity(item);
+        var product = checkStoreInventory(chooseID, storeInventory);
+        if (product) {
+            selectQuantity(product);
         } else {
             console.log("Sorry, we don't have this item available. Please check back with us tomorrow!");
             showAllItems();
@@ -89,12 +87,21 @@ function selectQuantity(product) {
         if (quantity > product.stock_quantity) {
             console.log("Not enough in stock. Please purchase something else.")
         } else {
-            makePurchase()
+            makePurchase(product, quantity)
         }
     });
 }
 
 function makePurchase(product, quantity) {
-    connection.query("UPDATE products SET stock_quantity = 
+    connection.query("UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?", [quantity, product.item_id],
+        function (error) {
+            if (error) throw error;
+            console.log("Thank you for your purchase of " + quantity + " " + product.product_name + "'s!");
+            connection.end();
+        }
+    );
+}
+
+function checkStoreInventory() {
 
 }
