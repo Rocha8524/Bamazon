@@ -15,6 +15,8 @@ var connection = mysql.createConnection({
 
     // Your password
     password: "WARNING",
+
+    // Connects to the database used in MySQL
     database: "bamazon_db"
 });
 
@@ -24,45 +26,54 @@ connection.connect(function (error) {
     welcomeShopper()
 });
 
+// Create a function that greets customer entering the store
 function welcomeShopper() {
+    // Inquirer package that prompts customer choice
     inquirer.prompt({
         name: "store",
         type: "rawlist",
         message: "Welcome to Bamazon. Are you interested in shopping with us today?",
         choices: ["Yes", "No"]
-    })
-        .then(function (answer) {
-            if (answer.store === "Yes") {
-                console.log("\n" + "We are glad you are doing buisness with us today." + "\n" + "We have a great selection of goods in stock." + "\n");
-                showAllItems();
-            } else {
-                console.log("Just browsing, get lost you freeloader!");
-                connection.end();
-            }
-        });
+        // Allows a response to the choice user makes on the console
+    }).then(function (answer) {
+        if (answer.store === "Yes") {
+            console.log("\n" + "We are glad you are doing buisness with us today." + "\n" + "We have a great selection of goods in stock." + "\n");
+            showAllItems();
+            // Ends connection automatically
+        } else {
+            console.log("Just browsing, get lost you freeloader!");
+            connection.end();
+        }
+    });
 }
 
+// Create a function that list all the items available for purchase
 function showAllItems() {
-    connection.query("SELECT * FROM products",
-        function (error, response) {
-            if (error) throw error;
-            console.table(response);
-            startShopping()
-        });
+    connection.query("SELECT * FROM products", function (error, response) {
+        if (error) throw error;
+        // Connect console.table npm package and display table from MySQL Database
+        console.table(response);
+        startShopping()
+    });
 }
 
-function startShopping(storeInventory) {
+// Create a function that prompts and allows user to choose what item to buy
+function startShopping() {
+    // Inquirer package that prompts customer choice
     inquirer.prompt([{
         name: "choose",
         type: "input",
         message: "What item would you like to purchase today? Choose your product based on the item id on the table",
         validate: function (value) {
-            return !isNaN(value);
-
+            if (isNaN(value) == false) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }]).then(function (value) {
         var chooseID = parseInt(value.choose);
-        var product = checkStoreInventory(chooseID, storeInventory);
+        var product = checkStoreInventory(chooseID);
         if (product) {
             selectQuantity(product);
         } else {
@@ -72,7 +83,8 @@ function startShopping(storeInventory) {
     });
 }
 
-function selectQuantity(product) {
+// Create a function that allows user to choose how much of the item they wish to buy
+function selectQuantity() {
     inquirer.prompt([{
         name: "quantity",
         type: "input",
@@ -92,7 +104,7 @@ function selectQuantity(product) {
     });
 }
 
-function makePurchase(product, quantity) {
+function makePurchase() {
     connection.query("UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?", [quantity, product.item_id],
         function (error) {
             if (error) throw error;
