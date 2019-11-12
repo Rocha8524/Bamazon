@@ -60,39 +60,41 @@ function showAllItems() {
 // Create a function that prompts and allows user to choose what item to buy
 function startShopping() {
     // Inquirer package that prompts customer choice
-    inquirer.prompt([{
-        name: "choose",
-        type: "input",
-        message: "What item would you like to purchase today? Choose your product based on the item id on the table",
-        validate: function (value) {
-            if (isNaN(value) == false) {
-                return true;
-            } else {
-                return false;
+    inquirer.prompt([
+        {
+            name: "itemID",
+            type: "input",
+            message: "What item would you like to purchase today? Choose your product based on the item id on the table",
+            validate: function (value) {
+                if (isNaN(value) == false) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
-    }]).then(function (value) {
-        var chooseID = parseInt(value.choose);
-        var product = checkStoreInventory(chooseID);
-        if (product) {
-            selectQuantity(product);
-        } else {
-            console.log("Sorry, we don't have this item available. Please check back with us tomorrow!");
-            showAllItems();
-        }
+    ]).then(function (answer) {
+        connection.query("SELECT id FROM products", function (error, response) {
+            var chooseID = answer.itemID;
+            if (chooseID) {
+                console.log(answer)
+                selectQuantity();
+            } else {
+                console.log("Sorry, we don't have this item available. Please check back with us tomorrow!");
+                connection.end();
+            };
+        });
     });
 }
 
 // Create a function that allows user to choose how much of the item they wish to buy
 function selectQuantity() {
-    inquirer.prompt([{
-        name: "quantity",
-        type: "input",
-        message: "How many would you like to purchase today?",
-        validate: function (value) {
-            return value > 0;
+    inquirer.prompt([
+        {
+            name: "quantity",
+            type: "input",
+            message: "How many would you like to purchase today?",
         }
-    }
     ]).then(function (value) {
         var quantity = parseInt(value.quantity);
 
