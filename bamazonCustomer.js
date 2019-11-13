@@ -99,7 +99,7 @@ function startShopping() {
                 } else {
                     total = response[0].price * answer.stock_quantity;
                     department = response[0].department_name;
-                    console.log("Your Total Amount is $" + total);
+                    console.log("Your Total Amount is $" + total + "\n");
                     var math = response[0].stock_quantity - answer.stock_quantity;
                     updateTable(math, chooseID);
                 }
@@ -113,7 +113,7 @@ function updateTable(math, chooseID) {
     [math , chooseID],
     function (error, response) {
         if (error) throw error;
-        console.log(response.affectedRows + " products updated!\n");
+        console.log(response.affectedRows + " product has been updated!\n");
         console.log("Thank you for shopping with us. Have a great day!");
         connection.end();
     })
