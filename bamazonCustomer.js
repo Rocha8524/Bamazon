@@ -109,10 +109,13 @@ function startShopping() {
 
 function updateTable() {
     console.log("Updating inventory at Bamazon.\n");
-    var math = response[0].stock_quantity - parseInt(answer.stock_quantity);
-    connection.query("UPDATE products SET stock_quantity = " + math + "WHERE id =" + answer.itemID), function (error, response) {
+    /*var math = response[0].stock_quantity - parseInt(answer.stock_quantity);
+    var updateDatabase = "UPDATE products SET stock_quantity = " + math + "WHERE id =" + answer.itemID;
+    connection.query(updateDatabase, function (error, response) {
         if (error) throw error;
         console.log(response.affectedRows + " products updated!\n");
         connection.end();
-    }
+    })
+*/
+    connection.end();
 };
