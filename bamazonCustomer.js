@@ -64,26 +64,24 @@ function startShopping() {
         {
             name: "itemID",
             type: "input",
-            message: "What item would you like to purchase today? Choose your product based on the item id on the table",
+            message: "What item would you like to purchase today? Choose your product based on the item id on the table:",
             validate: function (value) {
-                if (isNaN(value) == false) {
+                if (!isNaN(value) && value < 11) {
                     return true;
                 } else {
+                    console.log("\n" + "Please enter a valid ID number between 1 & 10" + "\n");
                     return false;
                 }
             }
         }
     ]).then(function (answer) {
-        connection.query("SELECT id FROM products", function (error, response) {
-            var chooseID = answer.itemID;
-            if (chooseID) {
-                console.log(answer)
+        connection.query("SELECT * FROM products WHERE ?",
+            [{ id: answer.itemID }], function (error, response) {
+                if (error) throw error;
+                var chooseID = answer.itemID;
+                console.log("You have chosen to buy the item in id number: " + chooseID);
                 selectQuantity();
-            } else {
-                console.log("Sorry, we don't have this item available. Please check back with us tomorrow!");
-                connection.end();
-            };
-        });
+            });
     });
 }
 
@@ -94,15 +92,25 @@ function selectQuantity() {
             name: "quantity",
             type: "input",
             message: "How many would you like to purchase today?",
+            validate: function (value) {
+                if (isNaN(value) == false) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
-    ]).then(function (value) {
-        var quantity = parseInt(value.quantity);
-
-        if (quantity > product.stock_quantity) {
-            console.log("Not enough in stock. Please purchase something else.")
-        } else {
-            makePurchase(product, quantity)
-        }
+    ]).then(function (answer) {
+        connection.query('SELECT * FROM products WHERE itemID = ?', [answer.itemID], function (error, response) {
+            if (error) throw error;
+            console.log(response);
+            if (answer.stock_quantity > response.stock_quantity) {
+                console.log("Not enough in stock. Your order has been cancelled.");
+                connection.end();
+            } else {
+                makePurchase()
+            }
+        })
     });
 }
 
