@@ -74,6 +74,7 @@ function startShopping() {
                 }
             }
         },
+        // Inquirer package that prompts quantity you want to buy
         {
             name: "stock_quantity",
             type: "input",
@@ -87,15 +88,20 @@ function startShopping() {
                 }
             }
         }
+    // Function that console logs answer to quantity purchase inquirer
     ]).then(function (answer) {
         connection.query("SELECT * FROM products WHERE ?",
             [{ id: answer.itemID }], function (error, response) {
                 if (error) throw error;
                 var chooseID = answer.itemID;
                 console.log("\n" + "You have chosen to buy the item in id number: " + chooseID + "\n");
+
+                // Will end connection if user inputs quantity that is higher than what is available in MySQL Database
                 if (answer.stock_quantity > response[0].stock_quantity) {
                     console.log("Sorry, there isn't enough of the item you have requested in stock. Your order has been cancelled!");
                     connection.end();
+
+                // Calculates amount of the purchase
                 } else {
                     total = response[0].price * answer.stock_quantity;
                     department = response[0].department_name;
@@ -107,6 +113,7 @@ function startShopping() {
     });
 }
 
+// Updates table in MySQL Database
 function updateTable(math, chooseID) {
     console.log("Updating inventory at Bamazon.\n");
     connection.query("UPDATE products SET stock_quantity =? WHERE id =?", 
