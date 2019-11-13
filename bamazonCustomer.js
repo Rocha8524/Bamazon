@@ -23,7 +23,7 @@ var connection = mysql.createConnection({
 // Connect to the mysql server and sql database
 connection.connect(function (error) {
     if (error) throw error;
-    welcomeShopper()
+    welcomeShopper();
 });
 
 // Create a function that greets customer entering the store
