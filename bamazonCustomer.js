@@ -73,57 +73,60 @@ function startShopping() {
                     return false;
                 }
             }
+        },
+        {
+            name: "stock_quantity",
+            type: "input",
+            message: "How many would you like to purchase today?",
+            validate: function (value) {
+                var validQuantity = value.match(/^[0-9]+$/)
+                if (validQuantity) {
+                    return true
+                } else {
+                    console.log("\n" + "Please enter a valid quantity in order to complete your purchase." + "\n")
+                }
+            }
         }
     ]).then(function (answer) {
         connection.query("SELECT * FROM products WHERE ?",
             [{ id: answer.itemID }], function (error, response) {
                 if (error) throw error;
                 var chooseID = answer.itemID;
-                console.log("You have chosen to buy the item in id number: " + chooseID);
-                selectQuantity();
+                console.log("\n" + "You have chosen to buy the item in id number: " + chooseID + "\n");
+                if (answer.stock_quantity > response[0].stock_quantity) {
+                    console.log("Sorry, there isn't enough of the item you have requested in stock. Your order has been cancelled!");
+                    connection.end();
+                } else {
+                    total = response[0].price * answer.stock_quantity;
+                    department = response[0].department_name;
+                    console.log("Your Total Amount is $" + total);
+                    console.log("Thank you for shopping with us. Have a great day!");
+                    var math = response[0].stock_quantity - parseInt(answer.stock_quantity);
+                    connection.query("UPDATE products SET stock_quantity = " + math + "WHERE id =" + answer.itemID);
+                    updateTable();
+                }
             });
     });
 }
 
-// Create a function that allows user to choose how much of the item they wish to buy
-function selectQuantity() {
-    inquirer.prompt([
-        {
-            name: "quantity",
-            type: "input",
-            message: "How many would you like to purchase today?",
-            validate: function (value) {
-                if (isNaN(value) == false) {
-                    return true;
-                } else {
-                    return false;
-                }
+function updateTable(table, columnVal, clauseVal) {
+    console.log("Updating inventory at Bamazon.\n");
+    connection.query("UPDATE ? SET ? WHERE ?",
+        [
+            {
+                table_name: table
+            },
+            {
+                quantity: columnVal
+            },
+            {
+                flavor: clauseVal
             }
-        }
-    ]).then(function (answer) {
-        connection.query('SELECT * FROM products WHERE itemID = ?', [answer.itemID], function (error, response) {
+        ],
+        function (error, response) {
             if (error) throw error;
-            console.log(response);
-            if (answer.stock_quantity > response.stock_quantity) {
-                console.log("Not enough in stock. Your order has been cancelled.");
-                connection.end();
-            } else {
-                makePurchase()
-            }
-        })
-    });
-}
-
-function makePurchase() {
-    connection.query("UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?", [quantity, product.item_id],
-        function (error) {
-            if (error) throw error;
-            console.log("Thank you for your purchase of " + quantity + " " + product.product_name + "'s!");
+            console.log(response.affectedRows + " products updated!\n");
             connection.end();
         }
     );
-}
-
-function checkStoreInventory() {
-
 }

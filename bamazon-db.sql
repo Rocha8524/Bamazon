@@ -16,7 +16,7 @@ VALUES
 ("Playstation 4 Pro Console", "Video Games" , 399.99, 100), 
 ("LG Refrigerator", "Kitchen" , 2499.99, 12), 
 ("Alienware GTX 2060 GPU Desktop", "Computers", 1299.99, 11),
-("Sony 4K Professional Camcorder", "Cameras & Camcorders" , 3299.99, 4), 
+("Sony 4K Professional Camcorder", "Cameras & Camcorders" , 3299.99, 24), 
 ("Apple IPhone 11 Pro", "Cell Phones" , 899.99, 42), 
 ("Nintendo Switch Console", "Video Games" , 249.99, 76), 
 ("NINJA Pressure Cooker", "Kitchen", 200.00, 20),
