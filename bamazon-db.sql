@@ -19,7 +19,7 @@ VALUES
 ("Sony 4K Professional Camcorder", "Cameras & Camcorders" , 3299.99, 24), 
 ("Apple IPhone 11 Pro", "Cell Phones" , 899.99, 42), 
 ("Nintendo Switch Console", "Video Games" , 249.99, 76), 
-("NINJA Pressure Cooker", "Kitchen", 200.00, 20),
+("NINJA Pressure Cooker", "Kitchen", 199.99, 20),
 ("MSI Laptop GTX 2080 GPU", "Computers", 1799.99, 8),
 ("Canon Mark V 24px Camera", "Cameras & Camcorders" , 799.99, 10), 
 ("Samsung Galaxy 10", "Cell Phones", 699.99, 30);
