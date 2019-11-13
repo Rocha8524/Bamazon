@@ -101,32 +101,18 @@ function startShopping() {
                     department = response[0].department_name;
                     console.log("Your Total Amount is $" + total);
                     console.log("Thank you for shopping with us. Have a great day!");
-                    var math = response[0].stock_quantity - parseInt(answer.stock_quantity);
-                    connection.query("UPDATE products SET stock_quantity = " + math + "WHERE id =" + answer.itemID);
                     updateTable();
                 }
             });
     });
 }
 
-function updateTable(table, columnVal, clauseVal) {
+function updateTable() {
     console.log("Updating inventory at Bamazon.\n");
-    connection.query("UPDATE ? SET ? WHERE ?",
-        [
-            {
-                table_name: table
-            },
-            {
-                quantity: columnVal
-            },
-            {
-                flavor: clauseVal
-            }
-        ],
-        function (error, response) {
-            if (error) throw error;
-            console.log(response.affectedRows + " products updated!\n");
-            connection.end();
-        }
-    );
-}
+    var math = response[0].stock_quantity - parseInt(answer.stock_quantity);
+    connection.query("UPDATE products SET stock_quantity = " + math + "WHERE id =" + answer.itemID), function (error, response) {
+        if (error) throw error;
+        console.log(response.affectedRows + " products updated!\n");
+        connection.end();
+    }
+};
