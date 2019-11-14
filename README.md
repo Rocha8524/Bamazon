@@ -9,4 +9,4 @@ The customer interface allows the user to view the current inventory of store it
 
 To view how the application work, please click on the picture to be re-directed to the youtube video Bamazon Database Appication:
 
-[![Bamazon Database](http://img.gifyoutube.com/vi/Yl0QHKk_GfE/0.jpg)](http://www.youtube.com/watch?v=Yl0QHKk_GfE "Bamazon Database")
+[![Bamazon Database](http://img.youtube.com/vi/Yl0QHKk_GfE/0.jpg)](http://www.youtube.com/watch?v=Yl0QHKk_GfE "Bamazon Database")
