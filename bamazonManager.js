@@ -38,7 +38,7 @@ function storeInquirer() {
                 displayInventory();
                 break;
             case "Restock Inventory":
-                restockInventory();
+                restockRequest();
                 break;
             case "Add New Item":
                 addItem();
@@ -73,7 +73,7 @@ function displayInventory() {
     })
 };
 
-function restockInventory() {
+function restockRequest() {
     inquirer.prompt([
         {
             name: "ID",
@@ -83,12 +83,21 @@ function restockInventory() {
         {
             name: "quantity",
             type: "input",
-            message: "How much wouould you like to add to your inventory?"
+            message: "How much would you like to add to your inventory?"
         }
     ]).then(function (answers) {
-        var addedQuantity = answers.quantity;
-        var productID = answers.ID;
-        connection.query("SELECT * FROM ")
+        var quantity = answers.quantity;
+        var id = answers.ID;
+        restockInventory(quantity, id);
+    })
+};
+
+function restockInventory(quantity, id) {
+    connection.query("SELECT * FROM Products WHERE id = " + id, function (error) {
+        if (error) throw error;
+        connection.query("UPDATE Products SET stock_quantity = stock_quantity" + quantity + "WHERE id = " + id);
+        console.log("The product has been updated!")
+        displayInventory();
     })
 };
 
@@ -121,17 +130,29 @@ function addItem() {
         },
     ]).then(function (answers) {
         var id = answers.ID;
-        var name = answers.product - name;
+        var name = answers.product-name;
         var department = answers.category;
         var price = answers.price;
         var quantity = answers.stock - quantity;
-        connection.query("INSERT INTO products"(id, product_name, department_name, price, stock_quantity), VALUES("' + id + '", "' + name + '", "' + category + '", ' + price + ', ' + quantity +  '));
+        buildNewItem(id, name, department, price, quantity);
     });
 };
 
-
-
+function buildNewItem(id, name, department, price, quantity) {
+    connection.query('INSERT INTO products (id, product_name, department_name, price,stock_quantity) VALUES("' + id + '","' + name + '","' + department + '",' + price + ',' + quantity + ')');
+    displayInventory()
+};
 
 function removeItem() {
-
-}
+    inquirer.prompt([
+        {
+            name: "ID",
+            type: "input",
+            message: "What item would you like to remove"
+        },
+    ]).then(function (answers) {
+        var id = answers.ID;
+        connection.query('DELETE FROM Products WHERE item_id = ' + id);
+        displayInventory();
+    });
+};
