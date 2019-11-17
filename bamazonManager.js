@@ -67,6 +67,7 @@ function displayInventory() {
                 console.log("\n");
                 storeInquirer();
             } else {
+                console.log("\n" + "Have a good day!")
                 connection.end();
             }
         });
@@ -78,25 +79,39 @@ function restockRequest() {
         {
             name: "ID",
             type: "input",
-            message: "What is the item id number you need to restock?"
+            message: "What is the item id number you need to restock?",
+            validate: function (value) {
+                if (isNaN(value) == false) {
+                    return true
+                } else {
+                    return false;
+                }
+            }
         },
         {
-            name: "quantity",
+            name: "Quantity",
             type: "input",
-            message: "How much would you like to add to your inventory?"
+            message: "How much would you like to add to your inventory?",
+            validate: function (value) {
+                if (isNaN(value) == false) {
+                    return true
+                } else {
+                    return false;
+                }
+            }
         }
     ]).then(function (answers) {
-        var quantity = answers.quantity;
+        var quantity = answers.Quantity;
         var id = answers.ID;
         restockInventory(quantity, id);
-    })
+    });
 };
 
 function restockInventory(quantity, id) {
-    connection.query("SELECT * FROM Products WHERE id = " + id, function (error) {
+    connection.query("SELECT * FROM Products WHERE id = " + id, function (error, response) {
         if (error) throw error;
-        connection.query("UPDATE Products SET stock_quantity = stock_quantity" + quantity + "WHERE id = " + id);
-        console.log("The product has been updated!")
+        connection.query("UPDATE Products SET stock_quantity = " + quantity + "WHERE id = " + id);
+        console.log("\n" + "The product has been updated!")
         displayInventory();
     })
 };
@@ -109,31 +124,31 @@ function addItem() {
             message: "Add ID Number"
         },
         {
-            name: "product-name",
+            name: "Name",
             type: "input",
             message: "What item would you like to add to your inventory?"
         },
         {
-            name: "category",
+            name: "Department",
             type: "input",
-            message: "What retail department would you like to place your item"
+            message: "What retail department would you like to place your item?"
         },
         {
-            name: "price",
+            name: "Price",
             type: "input",
             message: "How much will the item cost for retail customers?"
         },
         {
-            name: "stock-quantity",
+            name: "Quantity",
             type: "input",
             message: "How much of the item would you like to stock?"
         },
     ]).then(function (answers) {
         var id = answers.ID;
-        var name = answers.product-name;
-        var department = answers.category;
-        var price = answers.price;
-        var quantity = answers.stock - quantity;
+        var name = answers.Name;
+        var department = answers.Department;
+        var price = answers.Price;
+        var quantity = answers.Quantity;
         buildNewItem(id, name, department, price, quantity);
     });
 };
@@ -148,11 +163,16 @@ function removeItem() {
         {
             name: "ID",
             type: "input",
-            message: "What item would you like to remove"
+            message: "What item would you like to remove?"
         },
-    ]).then(function (answers) {
+    ]).then(function (answers, response) {
         var id = answers.ID;
-        connection.query('DELETE FROM Products WHERE item_id = ' + id);
-        displayInventory();
+        console.table(response);
+        removeInventory(id);
     });
+
+    function removeInventory(id) {
+        connection.query("DELETE FROM Products WHERE id = " + id);
+        displayInventory();
+    };
 };
