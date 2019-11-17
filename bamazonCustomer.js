@@ -88,7 +88,7 @@ function startShopping() {
                 }
             }
         }
-    // Function that console logs answer to quantity purchase inquirer
+        // Function that console logs answer to quantity purchase inquirer
     ]).then(function (answer) {
         connection.query("SELECT * FROM products WHERE ?",
             [{ id: answer.itemID }], function (error, response) {
@@ -101,10 +101,9 @@ function startShopping() {
                     console.log("Sorry, there isn't enough of the item you have requested in stock. Your order has been cancelled!");
                     connection.end();
 
-                // Calculates amount of the purchase
+                    // Calculates amount of the purchase
                 } else {
                     total = response[0].price * answer.stock_quantity;
-                    department = response[0].department_name;
                     console.log("Your Total Amount is $" + total + "\n");
                     var math = response[0].stock_quantity - answer.stock_quantity;
                     updateTable(math, chooseID);
@@ -116,12 +115,12 @@ function startShopping() {
 // Updates table in MySQL Database
 function updateTable(math, chooseID) {
     console.log("Updating inventory at Bamazon.\n");
-    connection.query("UPDATE products SET stock_quantity =? WHERE id =?", 
-    [math , chooseID],
-    function (error, response) {
-        if (error) throw error;
-        console.log(response.affectedRows + " product has been updated!\n");
-        console.log("Thank you for shopping with us. Have a great day!");
-        connection.end();
-    })
+    connection.query("UPDATE products SET stock_quantity =? WHERE id =?",
+        [math, chooseID],
+        function (error, response) {
+            if (error) throw error;
+            console.log(response.affectedRows + " product has been updated!\n");
+            console.log("Thank you for shopping with us. Have a great day!");
+            connection.end();
+        })
 };

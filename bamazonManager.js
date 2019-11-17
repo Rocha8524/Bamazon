@@ -74,13 +74,64 @@ function displayInventory() {
 };
 
 function restockInventory() {
-
+    inquirer.prompt([
+        {
+            name: "ID",
+            type: "input",
+            message: "What is the item id number you need to restock?"
+        },
+        {
+            name: "quantity",
+            type: "input",
+            message: "How much wouould you like to add to your inventory?"
+        }
+    ]).then(function (answers) {
+        var addedQuantity = answers.quantity;
+        var productID = answers.ID;
+        connection.query("SELECT * FROM ")
+    })
 };
 
 function addItem() {
-
+    inquirer.prompt([
+        {
+            name: "ID",
+            type: "input",
+            message: "Add ID Number"
+        },
+        {
+            name: "product-name",
+            type: "input",
+            message: "What item would you like to add to your inventory?"
+        },
+        {
+            name: "category",
+            type: "input",
+            message: "What retail department would you like to place your item"
+        },
+        {
+            name: "price",
+            type: "input",
+            message: "How much will the item cost for retail customers?"
+        },
+        {
+            name: "stock-quantity",
+            type: "input",
+            message: "How much of the item would you like to stock?"
+        },
+    ]).then(function (answers) {
+        var id = answers.ID;
+        var name = answers.product - name;
+        var department = answers.category;
+        var price = answers.price;
+        var quantity = answers.stock - quantity;
+        connection.query("INSERT INTO products"(id, product_name, department_name, price, stock_quantity), VALUES("' + id + '", "' + name + '", "' + category + '", ' + price + ', ' + quantity +  '));
+    });
 };
+
+
+
 
 function removeItem() {
 
-};
+}
