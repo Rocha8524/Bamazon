@@ -79,7 +79,7 @@ function restockRequest() {
         {
             name: "ID",
             type: "input",
-            message: "What is the item id number you need to restock?",
+            message: "What item do you need to restock?",
             validate: function (value) {
                 if (isNaN(value) == false) {
                     return true
@@ -102,15 +102,15 @@ function restockRequest() {
         }
     ]).then(function (answers) {
         var quantity = answers.Quantity;
-        var id = answers.ID;
-        restockInventory(quantity, id);
+        var itemID = answers.ID;
+        restockInventory(quantity, itemID);
     });
 };
 
-function restockInventory(quantity, id) {
-    connection.query("SELECT * FROM Products WHERE id = " + id, function (error, response) {
+function restockInventory(quantity, itemID) {
+    connection.query("SELECT * FROM products WHERE id = " + itemID, function (error) {
         if (error) throw error;
-        connection.query("UPDATE Products SET stock_quantity = " + quantity + "WHERE id = " + id);
+        connection.query("UPDATE Products SET stock_quantity = stock_quantity + " + quantity);
         console.log("\n" + "The product has been updated!")
         displayInventory();
     })
